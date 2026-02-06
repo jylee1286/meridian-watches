@@ -23,29 +23,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function initLoadingScreen() {
   const loadingScreen = document.querySelector('.loading-screen');
-  const loadingBar = document.querySelector('.loading-bar');
   
-  let progress = 0;
-  const interval = setInterval(() => {
-    progress += Math.random() * 15;
-    if (progress > 100) progress = 100;
-    loadingBar.style.width = `${progress}%`;
-    
-    if (progress >= 100) {
-      clearInterval(interval);
-      setTimeout(() => {
-        loadingScreen.classList.add('hidden');
-        document.body.style.overflow = '';
-        // Trigger hero animations after loading
-        setTimeout(() => {
-          document.querySelector('.scene-hero')?.classList.add('loaded');
-        }, 300);
-      }, 500);
-    }
-  }, 100);
+  // Simulate loading with dramatic timing
+  setTimeout(() => {
+    loadingScreen.classList.add('hidden');
+    document.body.style.overflow = '';
+    // Trigger hero animations after loading
+    setTimeout(() => {
+      document.querySelector('.scene-hero')?.classList.add('loaded');
+      initRealTimeClock();
+      initCrownProgress();
+    }, 300);
+  }, 2500);
   
   // Prevent scroll during loading
   document.body.style.overflow = 'hidden';
+}
+
+/* ============================================
+   Real-Time Clock Display
+   ============================================ */
+
+function initRealTimeClock() {
+  const hoursEl = document.querySelector('.time-hours');
+  const minutesEl = document.querySelector('.time-minutes');
+  const secondsEl = document.querySelector('.time-seconds span');
+  
+  if (!hoursEl) return;
+  
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    hoursEl.textContent = hours;
+    minutesEl.textContent = minutes;
+    secondsEl.textContent = seconds;
+  }
+  
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+
+/* ============================================
+   Crown Progress Indicator
+   ============================================ */
+
+function initCrownProgress() {
+  const crownFill = document.querySelector('.crown-fill');
+  const crownPercent = document.querySelector('.crown-percent');
+  
+  if (!crownFill) return;
+  
+  const circumference = 2 * Math.PI * 45; // r=45
+  
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = scrollTop / docHeight;
+    const offset = circumference - (progress * circumference);
+    
+    crownFill.style.strokeDashoffset = offset;
+    crownPercent.textContent = Math.round(progress * 100);
+  });
 }
 
 /* ============================================
