@@ -313,6 +313,7 @@ function initChapterNav() {
 function initScrollProgress3D() {
   const heroWatches = document.querySelectorAll('.hero-watch');
   const heroSection = document.querySelector('.scene-hero');
+  const productImages = document.querySelectorAll('.scene-product .product-image');
   
   if (!heroSection) return;
   
@@ -321,17 +322,38 @@ function initScrollProgress3D() {
     const heroHeight = heroSection.offsetHeight;
     const progress = Math.min(scrollY / heroHeight, 1);
     
-    // Hero watches float up and fade as you scroll past hero
+    // Hero watches: dramatic 3D exit as you scroll
     heroWatches.forEach((watch, index) => {
       const direction = index === 0 ? -1 : 1;
-      const translateY = -progress * 100;
-      const scale = 1 - (progress * 0.3);
-      const opacity = 1 - progress;
-      const rotate = (index === 0 ? -5 : 5) + (progress * direction * 30);
+      const translateX = progress * direction * 200;
+      const translateY = -progress * 150;
+      const translateZ = -progress * 500;
+      const scale = 1 - (progress * 0.4);
+      const opacity = 1 - (progress * 1.2);
+      const rotateY = progress * direction * 45;
+      const rotateZ = (index === 0 ? -5 : 5) + (progress * direction * 20);
       
-      watch.style.opacity = opacity;
+      watch.style.opacity = Math.max(0, opacity);
       if (!watch.matches(':hover')) {
-        watch.style.transform = `translateY(${translateY}px) scale(${scale}) rotate(${rotate}deg)`;
+        watch.style.transform = `
+          translate3d(${translateX}px, ${translateY}px, ${translateZ}px) 
+          scale(${scale}) 
+          rotateY(${rotateY}deg) 
+          rotateZ(${rotateZ}deg)
+        `;
+      }
+    });
+    
+    // Product images: subtle breathing based on scroll
+    productImages.forEach((img, index) => {
+      const rect = img.getBoundingClientRect();
+      const viewportCenter = window.innerHeight / 2;
+      const imgCenter = rect.top + rect.height / 2;
+      const distanceFromCenter = (imgCenter - viewportCenter) / viewportCenter;
+      const breathe = Math.sin(scrollY * 0.005 + index) * 3;
+      
+      if (!img.classList.contains('dragging')) {
+        img.style.transform = `translateY(${breathe}px) rotateY(${distanceFromCenter * 5}deg)`;
       }
     });
   });
