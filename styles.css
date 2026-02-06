@@ -109,6 +109,106 @@
   transform: scale(3);
 }
 
+/* ============================================
+   Film Grain Overlay
+   ============================================ */
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9000;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ============================================
+   Scene Chapter Navigation
+   ============================================ */
+
+.chapter-nav {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chapter-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: all 0.4s var(--ease-out-expo);
+  position: relative;
+}
+
+.chapter-dot::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.65rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.chapter-dot:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.chapter-dot:hover::after {
+  opacity: 1;
+}
+
+.chapter-dot.active {
+  background: var(--color-accent);
+  box-shadow: 0 0 20px rgba(201, 169, 98, 0.5);
+}
+
+/* ============================================
+   Depth Layers
+   ============================================ */
+
+.depth-layer {
+  position: absolute;
+  pointer-events: none;
+}
+
+.depth-layer-1 {
+  width: 600px;
+  height: 600px;
+  top: -200px;
+  right: -200px;
+  background: radial-gradient(circle, rgba(201, 169, 98, 0.03) 0%, transparent 60%);
+  animation: floatSlow 20s ease-in-out infinite;
+}
+
+.depth-layer-2 {
+  width: 400px;
+  height: 400px;
+  bottom: -100px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(184, 149, 110, 0.04) 0%, transparent 60%);
+  animation: floatSlow 25s ease-in-out infinite reverse;
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -30px) scale(1.1); }
+}
+
 :root {
   --color-bg: #0a0a0a;
   --color-bg-elevated: #111111;

@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initProductRotation();
   initScrollProgress3D();
+  initChapterNav();
 });
 
 /* ============================================
@@ -259,6 +260,50 @@ function initProductRotation() {
       img.style.transform = 'rotateY(0deg)';
     });
   });
+}
+
+/* ============================================
+   Chapter Navigation
+   ============================================ */
+
+function initChapterNav() {
+  const dots = document.querySelectorAll('.chapter-dot');
+  const scenes = document.querySelectorAll('.scene');
+  
+  // Click to navigate
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.dataset.target;
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+  
+  // Update active state on scroll
+  const observerOptions = {
+    root: null,
+    rootMargin: '-40% 0px -40% 0px',
+    threshold: 0
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const sceneId = entry.target.id;
+        dots.forEach(dot => {
+          if (dot.dataset.target === sceneId) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+    });
+  }, observerOptions);
+  
+  scenes.forEach(scene => observer.observe(scene));
 }
 
 /* ============================================
