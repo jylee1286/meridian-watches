@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MERIDIAN — Timepieces</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-logo">MERIDIAN</div>
+    <div class="nav-links">
+      <a href="#silver">Silver</a>
+      <a href="#leather">Heritage</a>
+      <a href="#collection">Collection</a>
+    </div>
+  </nav>
+
+  <!-- Progress Indicator -->
+  <div class="progress-container">
+    <div class="progress-bar"></div>
+  </div>
+
+  <!-- Scene Container -->
+  <main class="scene-container">
+    
+    <!-- Scene 1: Hero -->
+    <section class="scene scene-hero" id="hero">
+      <div class="scene-content">
+        <div class="hero-text">
+          <span class="hero-eyebrow">Est. 2026</span>
+          <h1 class="hero-title">
+            <span class="title-line">Time</span>
+            <span class="title-line">Reimagined</span>
+          </h1>
+          <p class="hero-subtitle">Scroll to explore the collection</p>
+          <div class="scroll-indicator">
+            <div class="scroll-line"></div>
+          </div>
+        </div>
+        <div class="hero-watches">
+          <img src="images/silver-watch-nobg.png" alt="Silver Watch" class="hero-watch hero-watch-1">
+          <img src="images/leather-watch-nobg.png" alt="Leather Watch" class="hero-watch hero-watch-2">
+        </div>
+      </div>
+      <div class="scene-gradient"></div>
+    </section>
+
+    <!-- Scene 2: Brand Story -->
+    <section class="scene scene-story" id="story">
+      <div class="scene-content scene-content-center">
+        <div class="story-text">
+          <span class="section-number">01</span>
+          <h2 class="section-title">The Art of Precision</h2>
+          <p class="section-body">
+            Every Meridian timepiece begins with a singular vision: 
+            to capture the essence of time itself. Crafted by master 
+            horologists in our Swiss atelier, each watch represents 
+            hundreds of hours of meticulous work.
+          </p>
+        </div>
+      </div>
+      <div class="floating-elements">
+        <div class="float-circle float-circle-1"></div>
+        <div class="float-circle float-circle-2"></div>
+      </div>
+    </section>
+
+    <!-- Scene 3: Silver Watch -->
+    <section class="scene scene-product scene-silver" id="silver">
+      <div class="scene-content scene-content-split">
+        <div class="product-image-container">
+          <div class="product-glow"></div>
+          <img src="images/silver-watch-nobg.png" alt="Silver Collection" class="product-image" data-parallax="0.15">
+        </div>
+        <div class="product-details">
+          <span class="section-number">02</span>
+          <span class="product-label">The Silver Collection</span>
+          <h2 class="product-title">Argentum</h2>
+          <p class="product-description">
+            Pure. Timeless. Unmistakable. The Argentum embodies minimalist 
+            perfection with its polished stainless steel case and bracelet. 
+            A sunburst dial catches light from every angle.
+          </p>
+          <div class="product-specs">
+            <div class="spec">
+              <span class="spec-label">Case</span>
+              <span class="spec-value">40mm Steel</span>
+            </div>
+            <div class="spec">
+              <span class="spec-label">Movement</span>
+              <span class="spec-value">Automatic</span>
+            </div>
+            <div class="spec">
+              <span class="spec-label">Water Resistant</span>
+              <span class="spec-value">100m</span>
+            </div>
+          </div>
+          <button class="cta-button">
+            <span>Discover</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 4: Craftsmanship Interlude -->
+    <section class="scene scene-interlude" id="craft">
+      <div class="scene-content scene-content-center">
+        <div class="interlude-text">
+          <div class="quote-mark">"</div>
+          <blockquote class="interlude-quote">
+            True luxury is not about possession.<br>
+            It is about the reverence for craft.
+          </blockquote>
+          <cite class="interlude-cite">— Meridian Philosophy</cite>
+        </div>
+      </div>
+      <div class="interlude-bg"></div>
+    </section>
+
+    <!-- Scene 5: Leather Watch -->
+    <section class="scene scene-product scene-leather" id="leather">
+      <div class="scene-content scene-content-split scene-content-reverse">
+        <div class="product-image-container">
+          <div class="product-glow product-glow-warm"></div>
+          <img src="images/leather-watch-nobg.png" alt="Heritage Collection" class="product-image" data-parallax="0.15">
+        </div>
+        <div class="product-details">
+          <span class="section-number">03</span>
+          <span class="product-label">The Heritage Collection</span>
+          <h2 class="product-title">Patina</h2>
+          <p class="product-description">
+            Where tradition meets refinement. The Patina features a 
+            hand-stitched Italian leather strap that develops character 
+            with wear. The silver sunburst dial reflects a century of 
+            horological excellence.
+          </p>
+          <div class="product-specs">
+            <div class="spec">
+              <span class="spec-label">Case</span>
+              <span class="spec-value">38mm Steel</span>
+            </div>
+            <div class="spec">
+              <span class="spec-label">Strap</span>
+              <span class="spec-value">Italian Leather</span>
+            </div>
+            <div class="spec">
+              <span class="spec-label">Crystal</span>
+              <span class="spec-value">Sapphire</span>
+            </div>
+          </div>
+          <button class="cta-button cta-button-warm">
+            <span>Discover</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 6: Collection Overview -->
+    <section class="scene scene-collection" id="collection">
+      <div class="scene-content">
+        <div class="collection-header">
+          <span class="section-number">04</span>
+          <h2 class="section-title">The Collection</h2>
+        </div>
+        <div class="collection-grid">
+          <div class="collection-card" data-tilt>
+            <div class="card-image-wrap">
+              <img src="images/silver-watch-nobg.png" alt="Argentum" class="card-image">
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">Argentum</h3>
+              <span class="card-price">$2,450</span>
+            </div>
+          </div>
+          <div class="collection-card" data-tilt>
+            <div class="card-image-wrap">
+              <img src="images/leather-watch-nobg.png" alt="Patina" class="card-image">
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">Patina</h3>
+              <span class="card-price">$1,850</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Scene 7: Footer -->
+    <section class="scene scene-footer" id="footer">
+      <div class="scene-content scene-content-center">
+        <div class="footer-content">
+          <div class="footer-logo">MERIDIAN</div>
+          <p class="footer-tagline">Time, Perfected.</p>
+          <div class="footer-links">
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Stores</a>
+          </div>
+          <div class="footer-copyright">© 2026 Meridian Timepieces</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

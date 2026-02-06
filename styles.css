@@ -1,0 +1,904 @@
+/* ============================================
+   MERIDIAN — Luxury Watch Website
+   Scroll-driven scene navigation
+   ============================================ */
+
+:root {
+  --color-bg: #0a0a0a;
+  --color-bg-elevated: #111111;
+  --color-text: #ffffff;
+  --color-text-muted: #888888;
+  --color-text-subtle: #555555;
+  --color-accent: #c9a962;
+  --color-accent-warm: #b8956e;
+  --color-silver: #e8e8e8;
+  
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
+
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 4rem;
+  mix-blend-mode: difference;
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: 0.3em;
+  color: var(--color-text);
+}
+
+.nav-links {
+  display: flex;
+  gap: 3rem;
+}
+
+.nav-links a {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+}
+
+/* ============================================
+   Progress Bar
+   ============================================ */
+
+.progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 101;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, var(--color-accent), var(--color-accent-warm));
+  transition: height 0.1s ease-out;
+}
+
+/* ============================================
+   Scene System
+   ============================================ */
+
+.scene-container {
+  width: 100%;
+}
+
+.scene {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden;
+}
+
+.scene-content {
+  width: 100%;
+  max-width: 1400px;
+  padding: 0 4rem;
+  position: relative;
+  z-index: 2;
+}
+
+.scene-content-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.scene-content-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6rem;
+  align-items: center;
+}
+
+.scene-content-reverse {
+  direction: rtl;
+}
+
+.scene-content-reverse > * {
+  direction: ltr;
+}
+
+/* ============================================
+   Scene 1: Hero
+   ============================================ */
+
+.scene-hero {
+  background: radial-gradient(ellipse at 50% 50%, #1a1a1a 0%, var(--color-bg) 70%);
+}
+
+.hero-text {
+  position: absolute;
+  left: 4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+}
+
+.hero-eyebrow {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeInUp 1s var(--ease-out-expo) 0.5s forwards;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+.title-line {
+  display: block;
+  opacity: 0;
+  transform: translateY(100%);
+  animation: revealLine 1.2s var(--ease-out-expo) forwards;
+}
+
+.title-line:nth-child(1) { animation-delay: 0.3s; }
+.title-line:nth-child(2) { 
+  animation-delay: 0.5s;
+  font-style: italic;
+  color: var(--color-accent);
+}
+
+.hero-subtitle {
+  font-size: 0.875rem;
+  font-weight: 300;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  opacity: 0;
+  animation: fadeInUp 1s var(--ease-out-expo) 1s forwards;
+}
+
+.scroll-indicator {
+  margin-top: 3rem;
+  opacity: 0;
+  animation: fadeInUp 1s var(--ease-out-expo) 1.3s forwards;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(180deg, var(--color-accent) 0%, transparent 100%);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+.hero-watches {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50vw;
+  height: 60vh;
+  pointer-events: none;
+}
+
+.hero-watch {
+  position: absolute;
+  max-width: 45%;
+  filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5));
+  opacity: 0;
+  transition: transform 0.3s var(--ease-out-quart);
+}
+
+.hero-watch-1 {
+  left: 0;
+  top: 10%;
+  animation: watchFloat1 1.5s var(--ease-out-expo) 0.8s forwards;
+}
+
+.hero-watch-2 {
+  right: 0;
+  bottom: 10%;
+  animation: watchFloat2 1.5s var(--ease-out-expo) 1s forwards;
+}
+
+.scene-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(0deg, var(--color-bg) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+/* ============================================
+   Scene 2: Brand Story
+   ============================================ */
+
+.scene-story {
+  background: var(--color-bg);
+}
+
+.story-text {
+  max-width: 700px;
+}
+
+.section-number {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  color: var(--color-accent);
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+}
+
+.section-body {
+  font-size: 1.125rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+}
+
+.floating-elements {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.float-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 169, 98, 0.15);
+}
+
+.float-circle-1 {
+  width: 400px;
+  height: 400px;
+  top: 10%;
+  right: -100px;
+  animation: floatRotate 20s linear infinite;
+}
+
+.float-circle-2 {
+  width: 600px;
+  height: 600px;
+  bottom: -200px;
+  left: -200px;
+  animation: floatRotate 30s linear infinite reverse;
+}
+
+/* ============================================
+   Product Scenes
+   ============================================ */
+
+.scene-product {
+  background: var(--color-bg);
+}
+
+.product-image-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+}
+
+.product-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(201, 169, 98, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(60px);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+.product-glow-warm {
+  background: radial-gradient(circle, rgba(184, 149, 110, 0.2) 0%, transparent 70%);
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+  filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.4));
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.product-details {
+  padding: 2rem 0;
+}
+
+.product-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+
+.product-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--color-text) 0%, var(--color-silver) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.scene-leather .product-title {
+  background: linear-gradient(135deg, var(--color-accent-warm) 0%, var(--color-accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.product-description {
+  font-size: 1rem;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--color-text-muted);
+  margin-bottom: 2.5rem;
+  max-width: 450px;
+}
+
+.product-specs {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.spec-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.spec-value {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--color-text);
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background: transparent;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s var(--ease-out-expo);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--color-accent);
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.cta-button span,
+.cta-button svg {
+  position: relative;
+  z-index: 1;
+  transition: color 0.4s ease, transform 0.4s var(--ease-out-expo);
+}
+
+.cta-button:hover::before {
+  transform: translateX(0);
+}
+
+.cta-button:hover span,
+.cta-button:hover svg {
+  color: var(--color-bg);
+}
+
+.cta-button:hover svg {
+  transform: translateX(4px);
+}
+
+.cta-button-warm {
+  border-color: var(--color-accent-warm);
+  color: var(--color-accent-warm);
+}
+
+.cta-button-warm::before {
+  background: var(--color-accent-warm);
+}
+
+/* ============================================
+   Scene 4: Interlude
+   ============================================ */
+
+.scene-interlude {
+  background: var(--color-bg-elevated);
+}
+
+.interlude-text {
+  max-width: 900px;
+}
+
+.quote-mark {
+  font-family: var(--font-display);
+  font-size: 8rem;
+  font-weight: 300;
+  line-height: 0.5;
+  color: var(--color-accent);
+  opacity: 0.3;
+  margin-bottom: 2rem;
+}
+
+.interlude-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--color-text);
+  margin-bottom: 2rem;
+}
+
+.interlude-cite {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.interlude-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 20% 80%, rgba(201, 169, 98, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(184, 149, 110, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ============================================
+   Scene 6: Collection Grid
+   ============================================ */
+
+.scene-collection {
+  background: var(--color-bg);
+  padding: 6rem 0;
+}
+
+.collection-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.collection-card {
+  background: var(--color-bg-elevated);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 3rem;
+  transition: all 0.5s var(--ease-out-expo);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.collection-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201, 169, 98, 0.1) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.collection-card:hover {
+  border-color: rgba(201, 169, 98, 0.3);
+  transform: translateY(-8px);
+}
+
+.collection-card:hover::before {
+  opacity: 1;
+}
+
+.card-image-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  margin-bottom: 2rem;
+}
+
+.card-image {
+  max-width: 80%;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+  transition: transform 0.6s var(--ease-out-expo);
+}
+
+.collection-card:hover .card-image {
+  transform: scale(1.05) translateY(-10px);
+}
+
+.card-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  position: relative;
+  z-index: 1;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.card-price {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--color-accent);
+}
+
+/* ============================================
+   Scene 7: Footer
+   ============================================ */
+
+.scene-footer {
+  min-height: 60vh;
+  background: var(--color-bg-elevated);
+}
+
+.footer-content {
+  text-align: center;
+}
+
+.footer-logo {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.4em;
+  margin-bottom: 1rem;
+}
+
+.footer-tagline {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--color-text-muted);
+  margin-bottom: 3rem;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  margin-bottom: 4rem;
+}
+
+.footer-links a {
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--color-accent);
+}
+
+.footer-copyright {
+  font-size: 0.7rem;
+  color: var(--color-text-subtle);
+  letter-spacing: 0.1em;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes revealLine {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes watchFloat1 {
+  from {
+    opacity: 0;
+    transform: translate(-50px, 50px) rotate(-10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(-5deg);
+  }
+}
+
+@keyframes watchFloat2 {
+  from {
+    opacity: 0;
+    transform: translate(50px, -50px) rotate(10deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0) rotate(5deg);
+  }
+}
+
+@keyframes scrollPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scaleY(0.8);
+  }
+}
+
+@keyframes floatRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+/* ============================================
+   Scroll-triggered animations
+   ============================================ */
+
+.scene:not(.scene-hero) .section-number,
+.scene:not(.scene-hero) .section-title,
+.scene:not(.scene-hero) .section-body,
+.scene:not(.scene-hero) .product-label,
+.scene:not(.scene-hero) .product-title,
+.scene:not(.scene-hero) .product-description,
+.scene:not(.scene-hero) .product-specs,
+.scene:not(.scene-hero) .cta-button,
+.scene:not(.scene-hero) .interlude-text,
+.scene:not(.scene-hero) .collection-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+
+.scene.in-view .section-number,
+.scene.in-view .section-title,
+.scene.in-view .section-body,
+.scene.in-view .product-label,
+.scene.in-view .product-title,
+.scene.in-view .product-description,
+.scene.in-view .product-specs,
+.scene.in-view .cta-button,
+.scene.in-view .interlude-text,
+.scene.in-view .collection-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.scene.in-view .section-title { transition-delay: 0.1s; }
+.scene.in-view .section-body { transition-delay: 0.2s; }
+.scene.in-view .product-label { transition-delay: 0.05s; }
+.scene.in-view .product-title { transition-delay: 0.15s; }
+.scene.in-view .product-description { transition-delay: 0.25s; }
+.scene.in-view .product-specs { transition-delay: 0.35s; }
+.scene.in-view .cta-button { transition-delay: 0.45s; }
+.scene.in-view .collection-card:nth-child(1) { transition-delay: 0.1s; }
+.scene.in-view .collection-card:nth-child(2) { transition-delay: 0.2s; }
+
+/* ============================================
+   Responsive
+   ============================================ */
+
+@media (max-width: 1024px) {
+  .nav {
+    padding: 1.5rem 2rem;
+  }
+  
+  .scene-content {
+    padding: 0 2rem;
+  }
+  
+  .scene-content-split {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+  }
+  
+  .scene-content-reverse {
+    direction: ltr;
+  }
+  
+  .product-description {
+    max-width: 100%;
+  }
+  
+  .product-specs {
+    justify-content: center;
+  }
+  
+  .hero-text {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    text-align: center;
+    padding-top: 8rem;
+  }
+  
+  .hero-watches {
+    position: relative;
+    right: auto;
+    top: auto;
+    transform: none;
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+  }
+  
+  .hero-watch {
+    position: relative;
+    max-width: 40%;
+  }
+  
+  .collection-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .nav-links {
+    display: none;
+  }
+  
+  .hero-title {
+    font-size: 3rem;
+  }
+  
+  .product-specs {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+  }
+}
