@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initTextSplit();
   initLoadingScreen();
+  initTimeWarp();
   initCustomCursor();
   initProgressBar();
   initSceneObserver();
@@ -17,6 +18,51 @@ document.addEventListener('DOMContentLoaded', () => {
   initChapterNav();
   initHorizontalScroll();
 });
+
+/* ============================================
+   Time Warp Effect (Scroll Speed Detection)
+   ============================================ */
+
+function initTimeWarp() {
+  const container = document.querySelector('.scene-container');
+  const warpOverlay = document.querySelector('.time-warp-overlay');
+  const speedLines = document.querySelector('.speed-lines');
+  
+  if (!container || !warpOverlay) return;
+  
+  let lastScrollY = window.scrollY;
+  let lastTime = Date.now();
+  let scrollSpeed = 0;
+  let warpTimeout;
+  
+  window.addEventListener('scroll', () => {
+    const currentScrollY = window.scrollY;
+    const currentTime = Date.now();
+    const deltaY = Math.abs(currentScrollY - lastScrollY);
+    const deltaTime = currentTime - lastTime;
+    
+    if (deltaTime > 0) {
+      scrollSpeed = deltaY / deltaTime;
+    }
+    
+    // Trigger warp effect when scrolling fast
+    if (scrollSpeed > 2) {
+      container.classList.add('warping');
+      warpOverlay.classList.add('active');
+      speedLines.classList.add('active');
+      
+      clearTimeout(warpTimeout);
+      warpTimeout = setTimeout(() => {
+        container.classList.remove('warping');
+        warpOverlay.classList.remove('active');
+        speedLines.classList.remove('active');
+      }, 150);
+    }
+    
+    lastScrollY = currentScrollY;
+    lastTime = currentTime;
+  });
+}
 
 /* ============================================
    Text Split Animation (Letter by Letter)
