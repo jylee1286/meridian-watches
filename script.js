@@ -4,6 +4,7 @@
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initTextSplit();
   initLoadingScreen();
   initCustomCursor();
   initProgressBar();
@@ -16,6 +17,33 @@ document.addEventListener('DOMContentLoaded', () => {
   initChapterNav();
   initHorizontalScroll();
 });
+
+/* ============================================
+   Text Split Animation (Letter by Letter)
+   ============================================ */
+
+function initTextSplit() {
+  const quote = document.querySelector('.interlude-quote');
+  if (!quote) return;
+  
+  const text = quote.innerHTML;
+  const lines = text.split('<br>');
+  
+  let charIndex = 0;
+  const html = lines.map(line => {
+    const words = line.trim().split(' ');
+    return words.map(word => {
+      const chars = word.split('').map(char => {
+        const span = `<span class="char" style="--char-index: ${charIndex}">${char}</span>`;
+        charIndex++;
+        return span;
+      }).join('');
+      return `<span class="word">${chars}</span>`;
+    }).join(' ');
+  }).join('<br>');
+  
+  quote.innerHTML = html;
+}
 
 /* ============================================
    Loading Screen
