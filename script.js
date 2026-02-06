@@ -1,14 +1,101 @@
 /* ============================================
    MERIDIAN — Scroll-driven Scene Navigation
+   v2: Enhanced with loading, cursor, 3D effects
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initLoadingScreen();
+  initCustomCursor();
   initProgressBar();
   initSceneObserver();
   initParallax();
   initCardTilt();
   initSmoothScroll();
+  initProductRotation();
+  initScrollProgress3D();
 });
+
+/* ============================================
+   Loading Screen
+   ============================================ */
+
+function initLoadingScreen() {
+  const loadingScreen = document.querySelector('.loading-screen');
+  const loadingBar = document.querySelector('.loading-bar');
+  
+  let progress = 0;
+  const interval = setInterval(() => {
+    progress += Math.random() * 15;
+    if (progress > 100) progress = 100;
+    loadingBar.style.width = `${progress}%`;
+    
+    if (progress >= 100) {
+      clearInterval(interval);
+      setTimeout(() => {
+        loadingScreen.classList.add('hidden');
+        document.body.style.overflow = '';
+        // Trigger hero animations after loading
+        setTimeout(() => {
+          document.querySelector('.scene-hero')?.classList.add('loaded');
+        }, 300);
+      }, 500);
+    }
+  }, 100);
+  
+  // Prevent scroll during loading
+  document.body.style.overflow = 'hidden';
+}
+
+/* ============================================
+   Custom Cursor
+   ============================================ */
+
+function initCustomCursor() {
+  const cursorDot = document.querySelector('.cursor-dot');
+  const cursorGlow = document.querySelector('.cursor-glow');
+  
+  if (!cursorDot || !cursorGlow) return;
+  
+  let mouseX = 0, mouseY = 0;
+  let dotX = 0, dotY = 0;
+  let glowX = 0, glowY = 0;
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+  
+  // Smooth cursor animation
+  function animateCursor() {
+    // Dot follows quickly
+    dotX += (mouseX - dotX) * 0.2;
+    dotY += (mouseY - dotY) * 0.2;
+    cursorDot.style.left = `${dotX}px`;
+    cursorDot.style.top = `${dotY}px`;
+    
+    // Glow follows slowly
+    glowX += (mouseX - glowX) * 0.08;
+    glowY += (mouseY - glowY) * 0.08;
+    cursorGlow.style.left = `${glowX}px`;
+    cursorGlow.style.top = `${glowY}px`;
+    
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  
+  // Hover states
+  const interactiveElements = document.querySelectorAll('a, button, .collection-card, .product-image');
+  interactiveElements.forEach(el => {
+    el.addEventListener('mouseenter', () => cursorDot.classList.add('hovering'));
+    el.addEventListener('mouseleave', () => cursorDot.classList.remove('hovering'));
+  });
+  
+  // Hide on mobile
+  if ('ontouchstart' in window) {
+    cursorDot.style.display = 'none';
+    cursorGlow.style.display = 'none';
+  }
+}
 
 /* ============================================
    Progress Bar
@@ -63,6 +150,7 @@ function initParallax() {
     const mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
     
     parallaxElements.forEach(el => {
+      if (el.classList.contains('dragging')) return;
       const intensity = parseFloat(el.dataset.parallax) || 0.1;
       const x = mouseX * intensity * 50;
       const y = mouseY * intensity * 50;
@@ -138,30 +226,68 @@ function initSmoothScroll() {
 }
 
 /* ============================================
-   Cursor Glow Effect (Optional Enhancement)
+   Product Image 3D Rotation (Drag to rotate)
    ============================================ */
 
-function initCursorGlow() {
-  const cursor = document.createElement('div');
-  cursor.className = 'cursor-glow';
-  cursor.style.cssText = `
-    position: fixed;
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(201, 169, 98, 0.1) 0%, transparent 70%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 0;
-    transform: translate(-50%, -50%);
-    transition: opacity 0.3s ease;
-  `;
-  document.body.appendChild(cursor);
+function initProductRotation() {
+  const productImages = document.querySelectorAll('.product-image');
   
-  document.addEventListener('mousemove', (e) => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
+  productImages.forEach(img => {
+    let isDragging = false;
+    let startX = 0;
+    let currentRotation = 0;
+    
+    img.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      img.classList.add('dragging', 'rotating');
+      img.style.transition = 'none';
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      currentRotation = deltaX * 0.5;
+      img.style.transform = `rotateY(${currentRotation}deg)`;
+    });
+    
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      img.classList.remove('dragging', 'rotating');
+      img.style.transition = 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+      img.style.transform = 'rotateY(0deg)';
+    });
   });
 }
 
-// Uncomment to enable cursor glow:
-// initCursorGlow();
+/* ============================================
+   Scroll Progress 3D Transforms
+   ============================================ */
+
+function initScrollProgress3D() {
+  const heroWatches = document.querySelectorAll('.hero-watch');
+  const heroSection = document.querySelector('.scene-hero');
+  
+  if (!heroSection) return;
+  
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const heroHeight = heroSection.offsetHeight;
+    const progress = Math.min(scrollY / heroHeight, 1);
+    
+    // Hero watches float up and fade as you scroll past hero
+    heroWatches.forEach((watch, index) => {
+      const direction = index === 0 ? -1 : 1;
+      const translateY = -progress * 100;
+      const scale = 1 - (progress * 0.3);
+      const opacity = 1 - progress;
+      const rotate = (index === 0 ? -5 : 5) + (progress * direction * 30);
+      
+      watch.style.opacity = opacity;
+      if (!watch.matches(':hover')) {
+        watch.style.transform = `translateY(${translateY}px) scale(${scale}) rotate(${rotate}deg)`;
+      }
+    });
+  });
+}
